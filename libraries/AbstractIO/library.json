@@ -1,0 +1,12 @@
+{
+  "name": "AbstractIO",
+  "description": "Hardware agnostic io-stream interface",
+  "headers": [
+    "AbstractIO.h",
+    "DelimiterFramedIO.h",
+    "ArduinoUsbIO.h",
+    "ArduinoHidIO.h",
+    "FakeIO.h",
+    "FakeChannel.h"
+  ]
+}
