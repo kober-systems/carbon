@@ -1,0 +1,5 @@
+= General purpose data store
+
+This lib can be used as an abstraction for any persistant or temporary
+storage of data like file systems, databases, kv-stores etc.
+
