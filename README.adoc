@@ -1,1 +1,9 @@
 = Basic building blocks to access hardware from cpp
+
+== Gerneral usage
+Inside the libraries folder are folders with reusable interfaces.
+
+Inside the folders the main interface is allways named
+`Abstract<Name>.h` and is an abstract class. The other source files are
+implementations of that interface.
+
