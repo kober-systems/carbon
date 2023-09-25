@@ -8,6 +8,13 @@ DelimiterFramedIO::DelimiterFramedIO(
   this->delimiter = delimiter;
 }
 
+DelimiterFramedIO::DelimiterFramedIO(
+  AbstractBufferedIO* io,
+  parse_state (*check_delimiter)(char, size_t))
+{
+  this->io = io;
+}
+
 int DelimiterFramedIO::read(char *buffer, size_t sz)
 {
   int bytes = this->io->peek(buffer, sz);
