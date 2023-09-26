@@ -1,31 +1,32 @@
 #include "DelimiterFramedIO.h"
 
-DelimiterFramedIO::DelimiterFramedIO(AbstractBufferedIO* io, char delimiter)
-    : io(io), delimiter(delimiter), check_delimiter(nullptr)
-{}
+static DelimiterFramedIO::parse_state newline_proto(char cur, size_t pos) {
+  if (cur == '\n') {
+    return DelimiterFramedIO::parse_state::found;
+  }
+  return DelimiterFramedIO::parse_state::not_found;
+}
 
-DelimiterFramedIO::DelimiterFramedIO(AbstractBufferedIO* io, parse_state (*check_delimiterFunc)(char, size_t))
-    : io(io), check_delimiter(check_delimiterFunc)
+DelimiterFramedIO::DelimiterFramedIO(AbstractBufferedIO* io)
+    : io(io)
+{
+    this->check_delimiter = &newline_proto;
+}
+
+DelimiterFramedIO::DelimiterFramedIO(AbstractBufferedIO* io, parse_state (*check_delimiter)(char, size_t))
+    : io(io), check_delimiter(check_delimiter)
 {}
 
 int DelimiterFramedIO::read(char *buffer, size_t sz)
 {
   int bytes = this->io->peek(buffer, sz);
 
-  if (this->check_delimiter) { // If a delimiter checking function is provided
-    for (size_t i = 0; i < bytes && i < sz; i++) {
-      if (this->check_delimiter(buffer[i], i) == parse_state::found) {
-         return this->io->read(buffer, i + 1);
-      }
-    }
-    return 0;
-  }
+  // If no delimiter checking function is provided something is wrong
+  if (not this->check_delimiter) { return 0; }
 
-  // Otherwise, use the single delimiter
-  for (int i=0; i<bytes; i++) {
-    if (buffer[i] == this->delimiter) {
-      return this->io->read(buffer,
-        static_cast<size_t>(i) + 1);
+  for (size_t i=0; i<bytes; i++) {
+    if (this->check_delimiter(buffer[i], i) == parse_state::found) {
+      return this->io->read(buffer, i + 1);
     }
   }
 

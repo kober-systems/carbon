@@ -3,7 +3,6 @@
 
 #include "AbstractIO.h"
 
-// Implement delimiter based protocols
 class DelimiterFramedIO: public AbstractBufferedIO {
 public:
     enum class parse_state {
@@ -15,7 +14,7 @@ public:
         found
     };
 
-    DelimiterFramedIO(AbstractBufferedIO *io, char delimiter);
+    DelimiterFramedIO(AbstractBufferedIO *io);
     DelimiterFramedIO(AbstractBufferedIO *io, parse_state (*check_delimiter)(char, size_t));
 
     int read(char *buffer, size_t sz);
@@ -24,8 +23,7 @@ public:
 
 private:
     AbstractBufferedIO* io = nullptr;
-    char delimiter = '\n';
-    parse_state (*check_delimiter)(char, size_t) = nullptr;
+    parse_state (*check_delimiter)(char, size_t) = nullptr; // Function pointer for custom delimiter checking
 };
 
 #endif
