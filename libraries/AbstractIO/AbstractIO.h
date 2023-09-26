@@ -1,13 +1,13 @@
 #ifndef io_h_INCLUDED
 #define io_h_INCLUDED
 
-// Interface für eine allgemeine io Schnittstelle
+// Interface for a general io interface
 //
-// Zum großen Teil wird das einem Subset der Stream Klasse in Arduino
-// entsprechen. Diese lokale Schnittstelle wird definiert um leicht auf
-// neue Systeme außerhalb von Arduino anpassen zu können.
+// For the most part, this will correspond to a subset of the Stream class in Arduino.
+// This local interface is defined in order to easily adapt to
+// new systems outside of Arduino.
 //
-// Arduino Stream Referenz:
+// Arduino Stream Reference:
 // https://www.arduino.cc/reference/en/language/functions/communication/stream/
 
 #include <stddef.h>
@@ -21,10 +21,10 @@ public:
 
 class AbstractBufferedIO: public AbstractIO {
 public:
-  // Liest die nächsten `sz` Bytes eines Streams aus. Beim nächsten
-  // `read` sind diese Bytes weiterhin im Ausgabepuffer vorhanden. Ruft
-  // man `peek` mehrfach auf, so werden immer die nächsten Bytes aus dem
-  // Stream ausgelesen.
+  // Reads the next `sz` bytes of a stream. On the next
+  // `read`, these bytes are still present in the output buffer. If
+  // you call `peek` multiple times, it will always read the next bytes from the
+  // stream (and not from the cache).
   virtual int peek(char *buffer, size_t sz) = 0;
 };
 
