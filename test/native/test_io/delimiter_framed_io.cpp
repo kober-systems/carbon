@@ -21,7 +21,7 @@ SCENARIO("Delimiter Protocol") {
   auto usb = FakeIO();
 
   GIVEN("We have a newline delimited protocol") {
-    auto proto = DelimiterFramedIO(&usb, '\n');
+    auto proto = DelimiterFramedIO(&usb);
 
     WHEN("a string is send but without newline") {
       usb.simulate_send(STR("my test string"));
@@ -43,7 +43,7 @@ SCENARIO("Delimiter Protocol") {
   }
 
   GIVEN("We have a newline delimited protocol") {
-    auto proto = DelimiterFramedIO(&usb, '\n');
+    auto proto = DelimiterFramedIO(&usb);
 
     WHEN("a string is send but multiple newlines") {
       usb.simulate_send(STR("my test\nxstring\n"));
