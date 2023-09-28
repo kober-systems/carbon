@@ -1,0 +1,9 @@
+{
+  "name": "carbon",
+  "description": "Basic building blocks to access hardware from cpp",
+  "include": [
+    "libraries/AbstractDatastore",
+    "libraries/AbstractIO/",
+    "libraries/AbstractTimer"
+  ]
+}
