@@ -1,6 +1,9 @@
 {
   "name": "carbon",
   "description": "Basic building blocks to access hardware from cpp",
+  "scripts": {
+    "postinstall": "scripts/monorepo.py"
+  },
   "include": [
     "libraries/AbstractDatastore",
     "libraries/AbstractIO/",
