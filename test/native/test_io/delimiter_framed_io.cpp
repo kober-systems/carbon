@@ -3,6 +3,7 @@
 
 #include "DelimiterFramedIO.h"
 #include "FakeIO.h"
+#include "FakeChannel.h"
 
 #define BUFFER_SZ 256
 
@@ -113,6 +114,48 @@ SCENARIO("Delimiter Protocol") {
       CHECK(recv_bytes == STR_SZ("xstring\n"));
       CHECK(std::string(buffer, recv_bytes) == "xstring\n");
     }}}}
+  }
+}
+
+SCENARIO("Writer Formatting") {
+  char buffer[BUFFER_SZ];
+  auto usb = FakeIO();
+  auto client = FakeChannel(&usb);
+
+  GIVEN("We have a newline delimited protocol") {
+    auto proto = DelimiterFramedIO(&usb);
+
+    WHEN("a string is send but without newline") {
+      client << "my test string";
+
+    THEN("no data is received yet") {
+      int recv_bytes = proto.read(buffer, BUFFER_SZ);
+
+      REQUIRE(recv_bytes == 0);
+
+    WHEN("a newline is submitted") {
+      client << ".\n";
+
+    THEN("it receives the string till the newline") {
+      recv_bytes = proto.read(buffer, BUFFER_SZ);
+
+      CHECK(recv_bytes == STR_SZ("my test string.\n"));
+      CHECK(std::string(buffer, recv_bytes) == "my test string.\n");
+    }}}}
+  }
+
+  GIVEN("We have a newline delimited protocol") {
+    auto proto = DelimiterFramedIO(&usb);
+
+    WHEN("a formatted string is send") {
+      client << "string with numbers " << 1 << " and booleans " << true << "\n";
+
+    THEN("it receives the string till the newline") {
+      int recv_bytes = proto.read(buffer, BUFFER_SZ);
+
+      CHECK(recv_bytes == STR_SZ("string with numbers 1 and booleans true\n"));
+      CHECK(std::string(buffer, recv_bytes) == "string with numbers 1 and booleans true\n");
+    }}
   }
 }
 

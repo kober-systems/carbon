@@ -11,12 +11,37 @@
 // https://www.arduino.cc/reference/en/language/functions/communication/stream/
 
 #include <stddef.h>
+#include <cstring>
+#include <cstdio>
 
 class AbstractIO {
 public:
   virtual int read(char *buffer, size_t sz) = 0;
 
   virtual int write(const char *buffer, size_t sz) = 0;
+
+  AbstractIO& operator<<(const char* str) {
+    size_t sz = strlen(str);
+    write(str, sz);
+    return *this;
+  }
+
+  AbstractIO& operator<<(const int num) {
+    #define MAX_BUFFER_SIZE 20
+    char buffer[MAX_BUFFER_SIZE];
+    size_t sz = snprintf(buffer, MAX_BUFFER_SIZE, "%d", num);
+    write(buffer, sz);
+    return *this;
+  }
+
+  AbstractIO& operator<<(const bool v) {
+    if (v) {
+      write("true", strlen("true"));
+    } else {
+      write("false", strlen("false"));
+    }
+    return *this;
+  }
 };
 
 class AbstractBufferedIO: public AbstractIO {
