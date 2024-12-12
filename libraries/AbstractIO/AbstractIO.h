@@ -27,7 +27,7 @@ public:
   }
 
   AbstractIO& operator<<(const int num) {
-    #define MAX_BUFFER_SIZE 20
+    constexpr size_t MAX_BUFFER_SIZE = 20;
     char buffer[MAX_BUFFER_SIZE];
     size_t sz = snprintf(buffer, MAX_BUFFER_SIZE, "%d", num);
     write(buffer, sz);
