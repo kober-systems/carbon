@@ -3,7 +3,8 @@
 #ifndef ArduinoHid_h_INCLUDED
 #define ArduinoHid_h_INCLUDED
 
-#ifndef PLATFORM_ARDUINO_DISABLED
+#ifdef PLATFORM_ARDUINO_ENABLED
+#ifdef HIDIO_ENABLED
 
 #include "AbstractIO.h"
 
@@ -14,12 +15,10 @@
 
 class ArduinoHidIO: public AbstractBufferedIO {
 public:
-  // Die Schnittstelle initialisieren
+  // Initialize the interface
   //
-  // port:      Der gewrappte Arduino Stream
-  // buffer:    Der statische Puffer, der als interner Puffer für `peek`
-  //            verwendet wird.
-  // buffer_sz: Die Größe des staischen Puffers in bytes
+  // timeout:   timeout in ms before a `read`
+  //            or `peek` will time out
   ArduinoHidIO(uint32_t timeout = 10);
 
   int read(char *buffer, size_t sz);
@@ -33,6 +32,7 @@ private:
   uint32_t timeout = 10;
 };
 
-#endif // PLATFORM_ARDUINO_DISABLED
+#endif // HIDIO_ENABLED
+#endif // PLATFORM_ARDUINO_ENABLED
 #endif // ArduinoHid_h_INCLUDED
 

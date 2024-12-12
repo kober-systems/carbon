@@ -1,7 +1,7 @@
 #ifndef ArduinoHardwareTimer_h_INCLUDED
 #define ArduinoHardwareTimer_h_INCLUDED
 
-#ifndef PLATFORM_ARDUINO_DISABLED
+#ifdef PLATFORM_ARDUINO_ENABLED
 
 #include "AbstractTimer.h"
 
@@ -13,6 +13,6 @@ public:
   void current_time_set(uint32_t timestamp);
 };
 
-#endif // PLATFORM_ARDUINO_DISABLED
+#endif // PLATFORM_ARDUINO_ENABLED
 #endif // ArduinoHardwareTimer_h_INCLUDED
 

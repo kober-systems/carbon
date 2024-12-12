@@ -1,4 +1,4 @@
-#ifndef PLATFORM_ARDUINO_DISABLED
+#ifdef PLATFORM_ARDUINO_ENABLED
 
 #include "ArduinoHardwareTimer.h"
 
@@ -6,16 +6,22 @@
 
 ArduinoHardwareTimer::ArduinoHardwareTimer() {}
 
+#ifdef PLATFORM_TEENSY_ENABLED
 uint32_t ArduinoHardwareTimer::now() {
-  //return millis();
-
-  //_sps.cont.act_ms = millis();
-  //_sps.cont.system_sec = Teensy3Clock.get();
   return Teensy3Clock.get();
 }
 
 void ArduinoHardwareTimer::current_time_set(uint32_t timestamp) {
   Teensy3Clock.set(now());
 }
+#else
+uint32_t ArduinoHardwareTimer::now() {
+  return millis();
+}
 
-#endif // PLATFORM_ARDUINO_DISABLED
+void ArduinoHardwareTimer::current_time_set(uint32_t timestamp) {
+  // TODO
+}
+#endif // PLATFORM_TEENSY_ENABLED
+
+#endif // PLATFORM_ARDUINO_ENABLED

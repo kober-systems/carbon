@@ -1,4 +1,5 @@
-#ifndef PLATFORM_ARDUINO_DISABLED
+#ifdef PLATFORM_ARDUINO_ENABLED
+#ifdef HIDIO_ENABLED
 
 #include "ArduinoHidIO.h"
 
@@ -69,4 +70,5 @@ int ArduinoHidIO::peek(char *buffer, size_t sz) {
   return 0; // No data available
 }
 
-#endif // PLATFORM_ARDUINO_DISABLED
+#endif // HIDIO_ENABLED
+#endif // PLATFORM_ARDUINO_ENABLED

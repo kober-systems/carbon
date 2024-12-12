@@ -1,9 +1,9 @@
-// Implementierung der allgemeinen `io` Schnittstelle für Arduino
+// Implementation of the generic `io` interface for Arduino
 
 #ifndef ArduinoUsb_h_INCLUDED
 #define ArduinoUsb_h_INCLUDED
 
-#ifndef PLATFORM_ARDUINO_DISABLED
+#ifdef PLATFORM_ARDUINO_ENABLED
 
 #include "AbstractIO.h"
 
@@ -11,12 +11,12 @@
 
 class ArduinoUsbIO: public AbstractBufferedIO {
 public:
-  // Die Schnittstelle initialisieren
+  // Initialize the interface
   //
-  // port:      Der gewrappte Arduino Stream
-  // buffer:    Der statische Puffer, der als interner Puffer für `peek`
-  //            verwendet wird.
-  // buffer_sz: Die Größe des staischen Puffers in bytes
+  // port:      The wrapped arduino stream
+  // buffer:    The static buffer, wich will be used as
+  //            internal buffer for `peek`
+  // buffer_sz: The size of the static buffer in bytes
   ArduinoUsbIO(Stream *port, char *buffer = nullptr, size_t buffer_sz = 0);
 
   int read(char *buffer, size_t sz);
@@ -30,6 +30,6 @@ private:
   size_t internal_buffer_filled_sz = 0;
 };
 
-#endif // PLATFORM_ARDUINO_DISABLED
+#endif // PLATFORM_ARDUINO_ENABLED
 #endif // ArduinoUsb_h_INCLUDED
 
