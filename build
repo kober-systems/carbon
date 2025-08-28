@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+
+pio test -e hardware_agnostic_tests
