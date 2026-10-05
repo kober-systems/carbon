@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <unity.h>
 
-#include "../libraries/AbstractDatastore/PersistantDatastore.h"
+#include <PersistantDatastore.h>
 
 void test_functionality_of_file1(void) {
     bool someCondition = true;

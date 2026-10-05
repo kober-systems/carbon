@@ -2,3 +2,5 @@
 set -e
 
 pio test -e hardware_agnostic_tests
+sh test/renode/build_renode_unity.sh
+timeout 20s renode-test test/renode/teensy41.robot

@@ -1,0 +1,32 @@
+= Renode tests
+
+This directory contains the Renode platform model and Robot Framework tests
+for running the Teensy 4.1 Unity suites without physical hardware.
+
+== Running the tests
+
+From the repository root, build the firmware for every `test/unity/test_*`
+suite and run the Robot Framework tests:
+
+[source,sh]
+----
+sh test/renode/build_renode_unity.sh
+renode-test test/renode/teensy41.robot
+----
+
+The build script generates `teensy41.repl`, compiles every Unity suite for the
+`teensy41` PlatformIO environment, and writes a separate ELF and `.resc` script
+for each suite to `.pio/build/teensy41/`. Add a case to `teensy41.robot` when
+adding a new suite. A suite can provide a `build_flags` file for additional
+compiler or linker flags.
+
+== Model limitations
+
+Unity output is sent through Serial1 (`lpuart6`). Renode does not model the
+Teensy 4.1 MPU region limit, USB PLL, or optional external PSRAM used by this
+project. The generated scripts patch `configure_cache`, `usb_pll_start`, and
+`configure_external_ram` to return immediately in emulated flash; the ELF on
+disk is not changed. The model also reports DCDC voltage-ready and immediate
+ARM PLL lock, without simulating voltage regulation or PLL timing.
+
+These tests do not exercise MPU, cache, USB PLL, or PSRAM initialization.

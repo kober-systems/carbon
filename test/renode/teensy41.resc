@@ -1,0 +1,18 @@
+$name?="teensy41-unity"
+$bin?=$ORIGIN/../../.pio/build/teensy41/firmware.elf
+$repl?=$ORIGIN/teensy41.repl
+
+using sysbus
+console_log "Renode: creating machine"
+mach create $name
+console_log "Renode: loading Teensy 4.1 platform"
+machine LoadPlatformDescription $repl
+console_log "Renode: platform loaded; loading test firmware"
+sysbus LoadELF $bin
+sysbus WriteDoubleWord 0x40080000 0x80000000
+sysbus WriteWord `sysbus GetSymbolAddress "configure_cache"` 0x4770
+sysbus WriteWord `sysbus GetSymbolAddress "usb_pll_start"` 0x4770
+sysbus WriteWord `sysbus GetSymbolAddress "configure_external_ram"` 0x4770
+cpu0 PC `sysbus GetSymbolAddress "ResetHandler"`
+cpu0 SP `sysbus GetSymbolAddress "_estack"`
+console_log "Renode: test firmware loaded; CPU entry point set"

@@ -1,1 +1,8 @@
 .pio
+/logs
+/snapshots
+/log.html
+/report.html
+/robot_output.xml
+/results-teensy41.robot.xml
+/test/renode/teensy41.repl

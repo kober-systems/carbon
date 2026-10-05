@@ -1,0 +1,46 @@
+// Minimal i.MX RT1062 platform for the Teensy 4.1 Unity test runner.
+// Keep the CPU, firmware memories and Serial1 (LPUART6); the Zephyr-generated
+// hello_world platform also models many peripherals unused by these tests.
+
+itcm: Memory.MappedMemory @ sysbus 0x0
+    size: 0x80000
+
+dtcm: Memory.MappedMemory @ sysbus 0x20000000
+    size: 0x80000
+
+ocram2: Memory.MappedMemory @ sysbus 0x20200000
+    size: 0x80000
+
+ocram: Memory.MappedMemory @ sysbus 0x20280000
+    size: 0x40000
+
+// The CPU fetches firmware through mapped memory. The SPI flash shares that
+// memory so FlexSPI program/erase commands update EEPROM's AHB-visible bytes.
+flash_mem: Memory.MappedMemory @ sysbus 0x60000000
+    size: 0x800000
+
+flex_spi: Python.PythonPeripheral @ sysbus 0x402A8000
+    size: 0x4000
+    initable: true
+    filename: "flexspi_eeprom.py"
+
+dcdc: Memory.MappedMemory @ sysbus 0x40080000
+    size: 0x4000
+
+arm_pll: Python.PythonPeripheral @ sysbus 0x400D8000
+    size: 0x10
+    initable: true
+    filename: "arm_pll.py"
+
+nvic0: IRQControllers.NVIC @ {
+    sysbus new Bus.BusPointRegistration { address: 0xe000e000; cpu: cpu0 }
+}
+    -> cpu0@0
+    systickFrequency: 600000000
+
+cpu0: CPU.CortexM @ sysbus
+    cpuType: "cortex-m7"
+    nvic: nvic0
+
+lpuart6: UART.NXP_LPUART @ sysbus 0x40198000
+    IRQ->nvic0@25
