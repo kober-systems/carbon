@@ -1,0 +1,3 @@
+-Wl,--wrap=usb_rawhid_available
+-Wl,--wrap=usb_rawhid_recv
+-Wl,--wrap=usb_rawhid_send

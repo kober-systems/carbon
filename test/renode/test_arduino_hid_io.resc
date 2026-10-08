@@ -1,0 +1,14 @@
+$name?="teensy41-arduino-hid-io"
+$bin?=$ORIGIN/../../.pio/build/teensy41/test_arduino_hid_io.elf
+$repl?=$ORIGIN/teensy41.repl
+
+using sysbus
+mach create $name
+machine LoadPlatformDescription $repl
+sysbus LoadELF $bin
+sysbus WriteDoubleWord 0x40080000 0x80000000
+sysbus WriteWord `sysbus GetSymbolAddress "configure_cache"` 0x4770
+sysbus WriteWord `sysbus GetSymbolAddress "usb_pll_start"` 0x4770
+sysbus WriteWord `sysbus GetSymbolAddress "configure_external_ram"` 0x4770
+cpu0 PC `sysbus GetSymbolAddress "ResetHandler"`
+cpu0 SP `sysbus GetSymbolAddress "_estack"`
