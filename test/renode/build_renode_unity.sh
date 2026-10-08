@@ -17,8 +17,12 @@ for dir in test/unity/test_*; do
     if [ -f "$dir/build_flags" ]; then
         flags="$flags $(tr '\n' ' ' < "$dir/build_flags")"
     fi
-    PLATFORMIO_BUILD_FLAGS="$flags" pio test -e teensy41 -f "$suite" --without-uploading --without-testing
-    cp .pio/build/teensy41/firmware.elf ".pio/build/teensy41/$suite.elf"
+    PLATFORMIO_BUILD_FLAGS="$flags" pio test -e teensy41 -f "unity/${suite}" --without-uploading --without-testing
+    [ -f .pio/build/teensy41/firmware.elf ] || {
+        echo "PlatformIO did not build $suite" >&2
+        exit 1
+    }
+    mv .pio/build/teensy41/firmware.elf ".pio/build/teensy41/$suite.elf"
 
     # Renode loads a fresh machine for each suite. Keep generated scripts beside
     # their ELF so new suites need no hand-written .resc file.
