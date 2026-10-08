@@ -6,7 +6,11 @@ set -eu
 
 cd "$(dirname "$0")/../.."
 python3 test/renode/generate_teensy41_repl.py
-mkdir -p .pio/build/teensy41
+# PlatformIO cleans this environment when suite-specific build flags change.
+# Keep completed Renode artifacts outside its build directory so later suites
+# cannot delete earlier ones.
+artifacts=.pio/renode/teensy41
+mkdir -p "$artifacts"
 found=0
 for dir in test/unity/test_*; do
     found=1
@@ -22,11 +26,11 @@ for dir in test/unity/test_*; do
         echo "PlatformIO did not build $suite" >&2
         exit 1
     }
-    mv .pio/build/teensy41/firmware.elf ".pio/build/teensy41/$suite.elf"
+    mv .pio/build/teensy41/firmware.elf "$artifacts/$suite.elf"
 
     # Renode loads a fresh machine for each suite. Keep generated scripts beside
     # their ELF so new suites need no hand-written .resc file.
-    cat > ".pio/build/teensy41/$suite.resc" <<EOF
+    cat > "$artifacts/$suite.resc" <<EOF
 \$name="teensy41-$suite"
 \$bin=\$ORIGIN/$suite.elf
 \$repl?=\$ORIGIN/../../../test/renode/teensy41.repl
