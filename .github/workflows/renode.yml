@@ -1,0 +1,27 @@
+name: Renode CI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+      - name: Build Teensy 4.1 Unity Tests
+        run: sh test/renode/build_renode_unity.sh
+      - uses: antmicro/renode-test-action@v5
+        with:
+          renode-revision: 'master'
+          tests-to-run: 'test/renode/teensy41.robot'
