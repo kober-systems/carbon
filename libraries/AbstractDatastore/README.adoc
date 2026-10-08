@@ -3,3 +3,14 @@
 This lib can be used as an abstraction for any persistant or temporary
 storage of data like file systems, databases, kv-stores etc.
 
+== PersistantDatastore
+
+`PersistantDatastore<T>` uses the beginning of the device EEPROM (starting at
+address 0). Reserve this region exclusively for one store: its header and
+`capacity * sizeof(T)` bytes must fit in `EEPROM.length()`. `T` must be
+trivially copyable. A different type size or capacity invalidates previously
+stored entries. Writes without `commit=true` are visible only in the current
+instance; a committed write saves all current entries. Reopening a store
+restores the most recently committed entries. This implementation does not
+provide power-loss atomicity or detect hardware write failures.
+
