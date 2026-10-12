@@ -10,11 +10,12 @@ in
 
       teensy-loader-cli
       renode
+      aflplusplus
 
       # language server etc
       clang-tools
 
-      pkgs.zstd # needed for platformio as it does link dynamically against local libs
+      zstd # needed for platformio as it does link dynamically against local libs
     ];
 
   shellHook = ''
