@@ -117,6 +117,24 @@ SCENARIO("Delimiter Protocol") {
   }
 }
 
+SCENARIO("Binary frames are returned only after their delimiter arrives") {
+  FakeIO input;
+  DelimiterFramedIO framed(&input);
+  char buffer[4] = {};
+  const char prefix[] = {'a', '\0', 'b'};
+  input.simulate_send(prefix, sizeof(prefix));
+
+  CHECK(framed.peek(buffer, sizeof(buffer)) == 3);
+  CHECK(framed.read(buffer, sizeof(buffer)) == 0);
+  CHECK(framed.peek(buffer, sizeof(buffer)) == 3);
+
+  input.simulate_send("\n", 1);
+  CHECK(framed.read(buffer, 3) == 0);
+  CHECK(framed.read(buffer, sizeof(buffer)) == 4);
+  CHECK(std::string(buffer, sizeof(buffer)) == std::string("a\0b\n", 4));
+  CHECK(framed.read(buffer, sizeof(buffer)) == 0);
+}
+
 SCENARIO("Writer Formatting") {
   char buffer[BUFFER_SZ];
   auto usb = FakeIO();
